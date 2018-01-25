@@ -10,4 +10,6 @@
         * [工厂方法模式](design-patern/factory/factory-method.md)
         * [抽象工厂模式](design-patern/factory/abstract-factory.md)
     * [单例模式](design-patern/singleton.md)
+    * [命令模式](design-patern/command.md)
+    * [观察者模式](design-patern/observer.md)
 
