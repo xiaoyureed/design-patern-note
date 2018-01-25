@@ -9,4 +9,5 @@
         * [简单工厂模式](design-patern/factory/simple-factory.md)
         * [工厂方法模式](design-patern/factory/factory-method.md)
         * [抽象工厂模式](design-patern/factory/abstract-factory.md)
+    * [单例模式](design-patern/singleton.md)
 
