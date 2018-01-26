@@ -12,4 +12,5 @@
     * [单例模式](design-patern/singleton.md)
     * [命令模式](design-patern/command.md)
     * [观察者模式](design-patern/observer.md)
+    * [责任链模式](design-patern/chainOfResponsibility.md)
 
