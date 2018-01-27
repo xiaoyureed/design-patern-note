@@ -13,4 +13,8 @@
     * [命令模式](design-patern/command.md)
     * [观察者模式](design-patern/observer.md)
     * [责任链模式](design-patern/chainOfResponsibility.md)
+    * [代理模式](design-patern/proxy/README.md)
+        * [静态代理](design-patern/proxy/staticProxy.md)
+        * [动态代理](design-patern/proxy/dynamicProxy.md)
+    * [适配器模式](design-patern/adapter.md)
 
