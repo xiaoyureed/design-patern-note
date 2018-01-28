@@ -18,4 +18,5 @@
         * [动态代理](design-patern/proxy/dynamicProxy.md)
     * [适配器模式](design-patern/adapter.md)
     * [装饰器模式](design-patern/decorator.md)
+    * [享元模式](design-patern/flyweight.md)
 
