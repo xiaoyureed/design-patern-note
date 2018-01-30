@@ -67,7 +67,7 @@ public class FilterChain implements IFilter {
 }
 
 /**
- * 信息处理器, 封装了职责链
+ * 信息处理器, 封装了职责链, 这里相当与一个外观模式, 封装了内部细节,只提供给外部一个process()
  *
  * @version 0.1
  * @author xy

@@ -19,4 +19,6 @@
     * [适配器模式](design-patern/adapter.md)
     * [装饰器模式](design-patern/decorator.md)
     * [享元模式](design-patern/flyweight.md)
+    * [外观模式](design-patern/facade.md)
+    * [模版方法模式](design-patern/templateMethod.md)
 
