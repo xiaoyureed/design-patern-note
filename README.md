@@ -1,6 +1,8 @@
 # design-patern-note
 
-设计模式笔记, 备忘; [GitHub地址](https://github.com/xiaoyureed/design-patern-note)
+设计模式笔记, 备忘; 
+[GitHub](https://github.com/xiaoyureed/design-patern-note)
+[GitBook](https://xiaoyureed.gitbooks.io/design-patern-note/content/)
 
 ## 本地运行
 
