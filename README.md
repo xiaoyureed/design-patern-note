@@ -1,12 +1,15 @@
 # design-patern-note
 
-设计模式笔记, 备忘; 
+设计模式笔记, 备忘;
+
+## 在线查看
+
 [GitHub](https://github.com/xiaoyureed/design-patern-note/blob/master/SUMMARY.md)
 [GitBook](https://xiaoyureed.gitbooks.io/design-patern-note/content/)
 
-## 本地运行
+## GitBook本地运行
 
-*   GitBook
+*   install GitBook
 
     ```sh
     npm install gitbook-cli -g
