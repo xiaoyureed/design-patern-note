@@ -4,8 +4,8 @@
 
 ## 在线查看
 
-[GitHub](https://github.com/xiaoyureed/design-patern-note/blob/master/SUMMARY.md)
-[GitBook](https://xiaoyureed.gitbooks.io/design-patern-note/content/)
+[GitHub目录](https://github.com/xiaoyureed/design-patern-note/blob/master/SUMMARY.md)
+[GitBook目录](https://xiaoyureed.gitbooks.io/design-patern-note/content/)
 
 ## GitBook本地运行
 
