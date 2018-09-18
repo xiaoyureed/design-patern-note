@@ -37,11 +37,11 @@ public class SyncSingleton {
                 }
             }
         }
-        
         return instance;
     }
 }
 
+///////////////////////// 推荐这种写法: 借助 jvm 的特性帮助实现 singleton ////////////////////////////////////
 
 /**
  * 更安全, 更简单的单例
@@ -62,7 +62,7 @@ public class Singleton {
     }
     //类的静态成员只加载一次，这保证了只有一个对象
     private static class SingletonInstance{
-        static Singleton instance = new Singleton();
+        private static Singleton instance = new Singleton();
     }
 }
 
@@ -75,6 +75,7 @@ public class Singleton {
 *   构造函数私有
 *   提供一个公有静态工厂方法
 *   双重判断, 同步第二个判断, 解决多线程问题
+*   原型模式：单例模式是只有一个实例，原型模式每拷贝一次都会创造一个新的实例。
 
 优点:
 
@@ -96,15 +97,3 @@ public class Singleton {
 主键编号生成器
 
 操作系统中的打印池只允许有一个实例, 用来存储打印任务
-
-##  总结
-
-*	设计原则：无 
-*	常用场景：应用中有对象需要是全局的且唯一 
-*	使用概率：99.99999% 
-*	复杂度：低 
-*	变化点：无 
-*	选择关键点：一个对象在应用中出现多个实例是否会引起逻辑上或者是程序上的错误 
-*	爆炸点：在以为是单例的情况下，却产生了多个实例 
-*	相关设计模式 
-    *	原型模式：单例模式是只有一个实例，原型模式每拷贝一次都会创造一个新的实例。

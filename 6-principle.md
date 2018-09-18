@@ -1,16 +1,40 @@
 # 程序设计6原则
 
-## 开-闭原则（总）
+ref: <<设计模式之禅>>
 
-对拓展开放，对修改关闭, 实现一个热插拔的效果
+- 开放封闭原则（Open Close Principle,简称OCP） - 尽量通过扩展软件实体来解决需求变化，而不是通过修改已有的代码来完成变化
+
+    总纲领
+
+- 单一职责原则（Single Responsibility Principle，简称SRP ）- 针对类来说的; 
+
+    假如有类Class1完成职责T1，T2，当职责T1或T2有变更需要修改时，有可能影响到该类的另外一个职责正常工作。所以一个类/接口的职责应该尽可能少
+
+- 接口隔离原则（Interface Segregation Principle,简称ISP） - 针对接口来说的; 
+
+    尽量细化接口，接口中的方法尽量少
+
+- 里氏替换原则（Liskov Substitution Principle,简称LSP） - 在使用基类的的地方可以任意使用其子类，能保证子类完美替换基类。
+
+    尽量不要破坏继承体系
+
+- 依赖倒置原则（Dependence Inversion Principle,简称DIP） - 高层模块不应该依赖底层模块, 抽象不应该依赖细节；细节应该依赖抽象；
+
+    也就是 "面向接口编程"
+
+- 迪米特法则（Law of Demeter,简称LoD） - 类间解耦(一个类对自己依赖的类知道的越少越好)。
+
+## 开-闭原则（总）
 
 和依赖倒置原则有点类似, 但是有区别, 我的感觉是开闭原则更加偏向的是使用抽象来避免修改源代码，主张通过扩展去应对需求变更，而依赖倒置更加偏向的是层和层之间的解耦。
 
 这儿有个例子: 假设需要一个发送节日祝福的功能, 通过短信
 
+先看 bad demo：
+
 ```java
 /**
- * 信息发送帮助类, 通过短信发送
+ * 信息发送类, 通过短信发送
  *
  * @version: 0.1
  * @author: xy
@@ -33,14 +57,14 @@ public class MessageSend {
  */
 public class MessageService {
 
-    private MessageSend messageHelper;
+    private MessageSend sender;
     
     public MessageService() {
-        this.messageHelper = new MessageSend();
+        this.sender = new MessageSend();
     }
     
     public void send(String msg) {
-        messageHelper.send(msg);
+        sender.send(msg);
     }
 }
 
@@ -58,11 +82,11 @@ public class MessageClient {
         messageService.send("Merry Christmas !");
     }
 }
-``` 
 
-现在需要新支持另一种发送方式: 微信, 只好修改源码
+/////////////////////////////////////////////////////
 
-```java
+// 现在需要新支持另一种发送方式: 微信, 只好修改源码
+
 /**
  * 新增的信息发送帮助类, 支持email
  *
@@ -105,7 +129,7 @@ public enum SendType {
  */
 public class MessageService {
 
-    private MessageSend messageHelper;
+    private MessageSend sender;
     private SendType t;
     public MessageService(SendType t) {
         this.t= t;
@@ -118,11 +142,16 @@ public class MessageService {
 
 // 然后是client增加新的调用
 
+// 后续如果又要支持新的发送方式, 又需要大改MessageService源码;
+// 如果遵循开闭原则设计, 会怎么样呢?
 ```
-后续如果又要支持新的发送方式, 又需要大改MessageService源码;
-如果遵循开闭原则, 会怎么样呢?
+
+看看 good demo:
 
 ```java
+
+////////////////////////////////////////////////////////////////
+
 /**
  * 信息发送接口
  *
@@ -140,16 +169,17 @@ public class MessageSend implements ISendable{}
 public class EmailMessageSend implements ISendable{}
 
 // messageService以后可以一直不变
+
 public class MessageService {
 
-    private ISendable messageHelper;
+    private ISendable sender;
     
-    public MessageService(ISendable messageHelper) {
-        this.messageHelper = messageHelper;
+    public MessageService(ISendable sender) {
+        this.sender = messageHelper;
     }
     
     public void send(String msg) {
-        messageHelper.send(msg);
+        sender.send(msg);
     }
 }
 
@@ -165,15 +195,18 @@ public class MessageClient {
     }
 }
 
+// 对于MessageService服务类来说，不用做任何修改，只需要扩展新的推送消息的工具类即可, 这就是遵循开闭原则的好处
+
 ```
 
-对于MessageService服务类来说，不用做任何修改，只需要扩展新的推送消息的工具类即可, 这就是遵循开闭原则的好处
+## 单一职责原则
 
-## 合成复用原则（常用）
+也可理解为单一职责原则, 一个类或方法，只负责单一功
 
-也可理解为单一职责原则, 一个类或方法，只负责单一功能，尽量解耦
+解决这种问题: 假如有类Class1完成职责T1，T2，当职责T1或T2有变更需要修改时，有可能影响到该类的另外一个职责正常工作。
 
-错误示例：这里有明显多职责问题
+错误示例：
+
 ```java
 public class Calculator {
     public int add() throws NumberFormatException, IOException{
@@ -193,6 +226,7 @@ public class Calculator {
 ```
 
 遵循单一职责原则后, 是这样: 分离出来一个类用来读取数据，将一个类拆成了两个类，这样以后我们如果有减法，乘法等等，就不用出现那么多重复代码了
+
 ```java
 public class Reader {
     int a,b;
@@ -223,17 +257,16 @@ public class Calculator {
 
 ```
 
-## 里氏替换原则 (有事会违背以得到更多)
+## 里氏替换原则 (是否使用需要权衡)
 
 里氏代换原则中说，任何基类可以出现的地方，子类一定可以出现
 
 更直接的理解是: 子类一般不会重写父类的方法
 
-需要多注意的是：经常会违背这个原则，以得到更多
-
-里氏代换原则是对“开-闭”原则的补充。实现“开-闭”原则的关键步骤就是抽象化。而基类与子类的继承关系就是抽象化的具体实现，所以里氏代换原则是对实现抽象化的具体步骤的规范。
+需要多注意的是：有时候会为了灵活性牺牲这个原则
 
 错误示例：
+
 ```java
 /* 父类 */
 public class Parent {
@@ -261,36 +294,38 @@ public class Client {
     public static void main(String[] args) {
         SomeoneClass someoneClass = new SomeoneClass();
         someoneClass.someoneMethod(new Parent());
-        someoneClass.someoneMethod(new SubClass());//此处报错
-		//这个异常是运行时才会产生的，也就是说，我的SomeoneClass并不知道会出现这种情况，结果就是我调用下面这段代码的时候，本来我们的思维是Parent都可以传给someoneMethod完成我的功能，我的SubClass继承了Parent，当然也可以了，但是最终这个调用会抛出异常。
+        someoneClass.someoneMethod(new SubClass());//此处报错, 运行时才产生报错 // 破坏了继承体系
     }
 }
 
 ```
 
-
-## 接口隔离原则（常用）
+## 接口隔离原则
 
 接口最小化原则，保证接口内的方法尽可能的最少; 使用多个隔离的接口，比使用单个接口要好
 
+解决这种问题: 类A通过接口interface依赖类B，类C通过接口interface依赖类D，如果接口interface对于类A和类B来说不是最小接口，则类B和类D必须去实现他们不需要的方法。
+
 ```java
-//这是错误示例，当实现此接口 时，必须实现不必要的方法playbird()
+//这是错误示例，当实现此接口 时，必须实现不必要的方法 other()
 public interface Mobile {
     public void call();//手机可以打电话
     public void sendMessage();//手机可以发短信
-    public void playBird();//手机可以玩愤怒的小鸟？这是不合适的方法
+    public void game();//手机可以玩愤怒的小鸟？这是不合适的方法
 }
 //正确的方式是：新建一个接口来拓展Mobile接口
 public interface SmartPhone extends Mobile{
-    public void playBird();//智能手机的接口就可以加入这个方法了
+    public void game();//智能手机的接口就可以加入这个方法了
 }
 
 ```
 
-## 依赖倒置原则（常用）
+## 依赖倒置原则
 
 即实现都是易变的，而只有抽象是稳定的，所以当依赖于抽象时，实现的变化并不会影响客户端的调用。
 就像常说的`面向接口编程`
+
+解决这种问题: 类A直接依赖类B，假如要将类A改为依赖类C，则必须通过修改类A的代码来达成, 这明显不符合"开闭原则"; 将类A修改为依赖接口interface，类B和类C各自实现接口interface，类A通过接口interface间接与类B或者类C发生联系，则会大大降低修改类A的几率
 
 ```java
 //实现加法，抽象出一个接口，具体的实现类分别实现从数据库中读取、从文件系统读取，从XML文件读取
@@ -305,7 +340,9 @@ public interface Reader {
 ## 迪米特原则（常用）
 
 也称最小知道原则，即一个类应该尽量不要知道其他类太多的东西，不要和陌生的类有太多接触。
+
 错误示例：
+
 ```java
 //读取的工具类
 public class Reader {

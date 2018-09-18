@@ -37,7 +37,7 @@ public interface IObserver {
  * @author xy
  * @date 2018年1月25日 下午11:19:52
  */
-public class Target {
+public abstract class Target {
     /**
      * observer list
      */
@@ -77,8 +77,11 @@ public class Target {
     }
 }
 
+///////////////////// 如何使用?  ////////////////////////////////////////////
+
+// 先定义 observers, 多个, 实现自己的 update()
 /**
- * concrete observer1
+ *  concrete observer1
  *
  * @version 0.1
  * @author xy
@@ -110,16 +113,19 @@ public class Observer2 implements IObserver {
 }
 
 /**
- * test
+ * 
  *
  * @version 0.1
  * @author xy
  * @date 2018年1月25日 下午11:53:28
  */
-public class Client {
+public class MyTarget extends Target {
 
+    // ...
+
+    // 测试
     public static void main(String[] args) {
-        Target t = new Target();
+        Target t = new MyTarget();
         
         IObserver observer1 = new Observer1();
         IObserver observer2=  new Observer2();
@@ -156,19 +162,12 @@ public class Client {
 
 ## 应用实例
 
-特定节日/商品打折, 通过短信, 邮件, 微信多端发送节日/打折信息
+java.util.Observer
+java.util.EventListener
+javax.servlet.http.HttpSessionBindingListener
+RxJava
 
 凡是设计到1:1 or 1:N 的对象交互场景均可使用观察者模式
-
-## 总结
-
-•	设计原则：遵循迪米特、开闭原则 
-•	常用场景：需要将观察者与被观察者解耦或者是观察者的种类不确定 
-•	使用概率：40% 
-•	复杂度：中 
-•	变化点：观察者的种类与个数 
-•	选择关键点：观察者与被观察者是否是多对一的关系 
-•	爆炸点：观察者之间有过多的细节依赖 
 
 ## jdk中的观察者模式api
 
@@ -378,7 +377,9 @@ eg：例如Tomcat中的监听器listener
 此时, 作者就是事件源，而读者就是监听器
 
 ```java
-//定义作者事件这代表了一个作者事件，这个事件当中一般就是包含一个事件源，在这里就是作者
+//定义作者事件, 这代表了一个作者事件: 发布新书
+// 这个事件当中一般就是包含一个事件源，在这里就是作者, 通过 constructor 传入
+// 
 public class WriterEvent extends EventObject{
     private static final long serialVersionUID = 8546459078247503692L;
     public WriterEvent(Writer writer) {
@@ -388,12 +389,13 @@ public class WriterEvent extends EventObject{
         return (Writer) super.getSource();
     }
 }
-//监听器
+//对应的 需要有一个监听器监听这个事件, 对"指定事件" 做出反应
 public interface WriterListener extends EventListener{
+    // 参数: 被监听的事件
     void addNovel(WriterEvent writerEvent);
 }
 //作者类
-// 可以看到，作者类的主要变化是添加了一个自己的监听器列表，我们使用set是为了它的天然去重效果，并且提供给外部注册和注销的方法，与观察者模式相比，这个功能本身是由基类Observable提供的，不过观察者模式中有统一的观察者Observer接口，但是监听器没有，虽说有EventListener这个超级接口，但它毕竟没有任何行为。所以我们一般需要维持一个自己特有的监听器列表。
+// 可以看到，作者类的主要变化是添加了一个自己的监听器列表，我们使用set是为了它的天然去重效果，并且提供给外部注册和注销的方法，与观察者模式相比，jdk中的观察者api对于这个功能本身是由基类Observable 默认提供的，不过观察者模式中有统一的观察者Observer接口，但是监听器没有，虽说有EventListener这个超级接口，但它毕竟没有任何行为。所以我们一般需要维持一个自己特有的监听器列表。
 public class Writer{
     private String name;//作者的名称
     private String lastNovel;//记录作者最新发布的小说

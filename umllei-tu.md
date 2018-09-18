@@ -2,7 +2,7 @@
 
 ## quick start
 
-<img src="assets/pic1.png" style="zoom: 70%;"/>
+<img src="assets/pic1.png" style="zoom: 80%;"/>
 
 ## 类关系
 

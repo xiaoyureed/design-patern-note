@@ -8,6 +8,8 @@
 
 提供这样一个接口, 能够创建一系列相关or相互依赖的对象而不必指定这些对象具体的类
 
+隔离了具体类, client无需知道是哪个具体类被生成, 只需知道是那个具体工厂即可
+
 ## 结构
 
 ![](../../assets/pic7.png)
@@ -86,7 +88,7 @@ public class ProductB1 extends AbsProductB {
 }
 
 /**
- * concrete factory 1
+ * concrete factory 1: 生产产品组1
  *
  * @version 0.1
  * @author xy
@@ -139,7 +141,7 @@ public class ProductB2 extends AbsProductB {
 }
 
 /**
- * concrete factory2
+ * concrete factory2: 生产 产品组2
  *
  * @version 0.1
  * @author xy

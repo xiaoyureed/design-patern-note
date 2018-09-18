@@ -2,7 +2,7 @@
 
 ## 引入
 
-我们知道, 命令模式可以将请求者和执行者解耦, 客户端需要知道命令的接受者(如:Tv), 在创建命令的时候就把接受者与命令绑定在一起发送给请求者; 现在在命令模式的基础上, 不关心具体的命令/请求执行者, 只是将封装后的命令交给职责链的头部而已, 这就引出职责链模式
+我们知道, 命令模式可以将请求者和执行者解耦, 客户端需要知道命令的接受者(如:Tv), 在创建命令的时候就把接受者(电视)与命令绑定在一起发送给请求者(电视的遥控器); 现在在命令模式的基础上, 不关心具体的命令/请求执行者, 只是将封装后的命令交给职责链的头部而已, 这就引出职责链模式
 
 >*   链是一系列节点的集合。
 >*   链的各节点可灵活拆分再重组。
@@ -147,6 +147,8 @@ public class Client {
 
 ## 复杂（请求响应有序）责任链
 
+类比 servlet 中的 filter
+
 请求响应有序 类似这张示意图:
 
 ![](../assets/pic15.png)
@@ -205,7 +207,7 @@ public interface IFilter {
 public class FilterChain implements IFilter {
 
     /**
-     * 节点执行索引, 初始为0
+     * 节点执行索引, 初始为0; 表示当前执行到哪个filter了
      */
     private int currentFilterIndex = 0;
     
@@ -216,6 +218,7 @@ public class FilterChain implements IFilter {
     
     @Override
     public void doFilter(Request rqt, Response rsp, FilterChain chain) {
+        // 当 chain 中的 filter 被遍历执行完, 跳出
         if (this.filters.size() == currentFilterIndex) {
             return;
         }
@@ -303,22 +306,8 @@ public class Client {
 *   各个处理节点有公共的接口
 *   可以做成"请求响应有序"的需求, 此时注意防止循环调用
 
-## 适用场景
-
-
-
 ## 实例
 
 *   java.util.logging.Logger#log()
 *   Apache Commons Chain
 *   javax.servlet.Filter#doFilter()
-
-## 总结
-
-设计原则：遵循迪米特
-常用场景：一个请求的处理需要多个对象当中的一个或几个协作处理
-使用概率：15%
-复杂度：中
-变化点：处理链的长度与次序
-选择关键点：对于每一次请求是否每个处理的对象都需要一次处理机会
-爆炸点：无
