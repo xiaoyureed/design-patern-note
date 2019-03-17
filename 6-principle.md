@@ -172,7 +172,7 @@ public class EmailMessageSend implements ISendable{}
 
 public class MessageService {
 
-    private ISendable sender;
+    private ISendable sender;// 这是典型的组合优于继承;
     
     public MessageService(ISendable sender) {
         this.sender = messageHelper;
@@ -259,11 +259,11 @@ public class Calculator {
 
 ## 里氏替换原则 (是否使用需要权衡)
 
-里氏代换原则中说，任何基类可以出现的地方，子类一定可以出现
+里氏代换原则中说，所有引用基类的地方必须能透明地替换为使用其子类的对象, 是针对`继承`这一特性提出的(继承时最好遵循里氏替换)
 
 更直接的理解是: 子类一般不会重写父类的方法
 
-需要多注意的是：有时候会为了灵活性牺牲这个原则
+就是尽量不要从可实例化的父类中继承，而是要使用基于抽象类和接口的继承。
 
 错误示例：
 
@@ -322,8 +322,9 @@ public interface SmartPhone extends Mobile{
 
 ## 依赖倒置原则
 
-即实现都是易变的，而只有抽象是稳定的，所以当依赖于抽象时，实现的变化并不会影响客户端的调用。
-就像常说的`面向接口编程`
+即实现都是易变的，而只有接口是稳定的，所以当依赖于接口时，实现的变化并不会影响客户端的调用。
+
+就像常说的`面向接口编程`, 底层注入高层而不是高层依赖底层;
 
 解决这种问题: 类A直接依赖类B，假如要将类A改为依赖类C，则必须通过修改类A的代码来达成, 这明显不符合"开闭原则"; 将类A修改为依赖接口interface，类B和类C各自实现接口interface，类A通过接口interface间接与类B或者类C发生联系，则会大大降低修改类A的几率
 
@@ -336,49 +337,56 @@ public interface Reader {
 
 ```
 
+spring ioc 就是 依赖倒置的思想 (https://www.zhihu.com/question/23277575/answer/169698662)
+
 
 ## 迪米特原则（常用）
 
-也称最小知道原则，即一个类应该尽量不要知道其他类太多的东西，不要和陌生的类有太多接触。
+也称最小知识原则, 即一个类中不要出现无关的类, 如出现连续的get方法 `getXXX().getXXX().getXXX()`就可能违反了迪米特法则
+
+比如类A的方法需要借助类B完成, 类B又需要借助类C中的方法完成
 
 错误示例：
 
 ```java
-//读取的工具类
-public class Reader {
-    int a,b;
-    private String path;
-    private BufferedReader br;
-    public Reader(String path){
-        this.path = path;
-    }
-	//此方法不属于主要功能方法，暴露出来耦合度就太高了
-    public void setBufferedReader() throws FileNotFoundException{
-        br = new BufferedReader(new FileReader(new File(path)));
-    }
-	//此方法同上
-    public void readLine() throws NumberFormatException, IOException{
-        a = Integer.valueOf(br.readLine());
-        b = Integer.valueOf(br.readLine());
-    }
-	、//此方法是功能方法，应该暴露
-    public int getA(){
-        return a;
-    }
-	//主功能方法，该暴露
-    public int getB(){
-        return b;
-    }
+public class A {
+	public String name;
+	public A(String name) {
+		this.name = name;
+	}
+	public B getB(String name) {
+		return new B(name);
+	}
+	public void work() {
+		B b = getB("李四");
+		C c = b.getC("王五");// A 和C耦合了
+		c.work();
+	}
 }
+public class B {
+	private String name;
+	public B(String name) {
+		this.name = name;
+	}
+	public C getC(String name) {
+		return new C(name);
+	}
+}
+public class C {
+	public String name;
+	public C(String name) {
+		this.name = name;
+	}
+	public void work() {
+		System.out.println(name + "把这件事做好了");
+	}
+}
+
 public class Client {
-    public static void main(String[] args) throws Exception {
-        Reader reader = new Reader("E:/test.txt");
-        reader.setBufferedReader();//耦合度太高
-        reader.readLine();
-        int a = reader.getA();
-        int b = reader.getB();
-        //以下用于计算等等
-    }
+	public static void main(String[] args) {
+		A a = new A("张三");
+		a.work();
+	}
 }
 
 ```
@@ -386,33 +394,35 @@ public class Client {
 正确的改进:
 
 ```java
-public class Reader {
-    int a,b;
-    private String path;
-    private BufferedReader br;
-    public Reader(String path) throws Exception{
-        super();
-        this.path = path;
-        setBufferedReader();
-        readLine();
-    }
-    //注意，我们变为私有的方法，给封装起来了
-    private void setBufferedReader() throws FileNotFoundException{
-        br = new BufferedReader(new FileReader(path));
-    }
-    //注意，我们变为私有的方法
-    private void readLine() throws NumberFormatException, IOException{
-        a = Integer.valueOf(br.readLine());
-        b = Integer.valueOf(br.readLine());
-    }
-	//只暴露这两个方法
-    public int getA(){
-        return a;
-    }
-    public int getB(){
-        return b;
-    }
+public class A {
+	public String name;
+	public A(String name) {
+		this.name = name;
+	}
+	public B getB(String name) {
+		return new B(name);
+	}
+	public void work() {
+		B b = getB("李四");
+		b.work();
+	}
 }
+public class B {
+	private String name;
+	public B(String name) {
+		this.name = name;
+	}
+	public C getC(String name) {
+		return new C(name);
+	}
+	
+	public void work(){
+		C c = getC("王五");
+		c.work();
+	}
+}
+
+类 C 不变
 
 ```
 
