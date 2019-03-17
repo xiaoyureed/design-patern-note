@@ -12,14 +12,6 @@
 *   product 抽象产品角色: 所有待创建对象的父类
 *   concreteProduct 具体产品角色: 创建目标类
 
-类图
-
-<img src="../../assets/pic2.png" style="zoom: 70%"/>
-
-时序图
-
-<img src="../../assets/pic3.png" style="zoom: 80%"/>
-
 ## 代码分析
 
 ```java
