@@ -8,7 +8,7 @@ ref: <<设计模式之禅>>
 
 - 单一职责原则（Single Responsibility Principle，简称SRP ）- 针对类来说的; 
 
-    假如有类Class1完成职责T1，T2，当职责T1或T2有变更需要修改时，有可能影响到该类的另外一个职责正常工作。所以一个类/接口的职责应该尽可能少
+    所以一个类/接口的职责应该尽可能少
 
 - 接口隔离原则（Interface Segregation Principle,简称ISP） - 针对接口来说的; 
 
@@ -18,11 +18,11 @@ ref: <<设计模式之禅>>
 
     尽量不要破坏继承体系
 
-- 依赖倒置原则（Dependence Inversion Principle,简称DIP） - 高层模块不应该依赖底层模块, 抽象不应该依赖细节；细节应该依赖抽象；
+- 依赖倒置原则（Dependence Inversion Principle,简称DIP） - 高层模块不应该依赖底层模块, 而是底层模块注入高层模块
 
     也就是 "面向接口编程"
 
-- 迪米特法则（Law of Demeter,简称LoD） - 类间解耦(一个类对自己依赖的类知道的越少越好)。
+- 迪米特法则（Law of Demeter,简称LoD） - 类间解耦(一个类对自己依赖的类知道的越少越好)。方法的权限修饰符尽可能小; 加入中间类
 
 ## 开-闭原则（总）
 
