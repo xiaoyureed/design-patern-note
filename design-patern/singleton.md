@@ -30,7 +30,9 @@ public class SyncSingleton {
   //给出一个公共的静态方法返回一个单一实例
     public static SyncSingleton getInstance() {
         if (instance == null) {
-          //这里第二重判断：AB两个线程同时进入第一个判断内部，此时A当先拿到锁进入第二判断，创建了对象，B拿到锁后会再次进行判断，如果此处不判断，则会创建第二个对象；
+          //这里第二重判断：AB两个线程同时进入第一个判断内部，此
+          //时A当先拿到锁进入第二判断，创建了对象，B拿到锁后会再次
+          //进行判断，如果此处不判断，则会创建第二个对象；
             synchronized (SyncSingleton.class) {
                 if (instance == null) {
                     instance = new SyncSingleton();
@@ -47,8 +49,7 @@ public class SyncSingleton {
  * 更安全, 更简单的单例
  *
  *首先来说一下，这种方式为何会避免了上面莫名的错误，
- *主要是因为一个类的静态属性只会在第一次加载类时初始化，这是JVM帮我们保证的，
- *所以我们无需担心并发访问的问题。所以在初始化进行一半的时候，别的线程是无法使用的，因为JVM会帮我们强行同步这个过程。
+ *主要是因为一个类的静态属性只会在第一次加载类时初始化，这是类加载机制决定的
  *另外由于静态变量只初始化一次，所以singleton仍然是单例的。
  *
  * @version 0.1
@@ -96,4 +97,4 @@ public class Singleton {
 
 主键编号生成器
 
-操作系统中的打印池只允许有一个实例, 用来存储打印任务
+spring中的bean默认都是单例生成的;

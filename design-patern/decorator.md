@@ -1,74 +1,99 @@
 # 装饰器模式(Decorator)
 
-## 引入
-
-希望给一个对象添加行为, 但是又希望这个改动对调用者透明(换言之，客户端并不会觉得对象在装饰前和装饰后有什么不同); 这个和适配器模式相似, 但是有区别: 适配器模式的目的在于适配接口，装饰器模式的目的在于动态的添加功能，且可以叠加。 
-
-一般有两种方式可以实现给一个类或对象增加行为(和 adapter 类似)：
-
-*   继承机制，使用继承机制是给现有类添加功能的一种有效途径，通过继承一个现有类可以使得子类在拥有自身方法的同时还拥有父类的方法。但是这种方法是静态的，用户不能控制增加行为的方式和时机。
-
-*   关联机制，即将一个类的对象嵌入另一个对象中，由另一个对象来决定是否调用嵌入对象的行为以便扩展自己的行为，我们称这个嵌入的对象为装饰器(Decorator)
-
 ## 定义
 
-装饰模式(Decorator Pattern) ：动态地给一个对象增加一些额外的职责(Responsibility)，就增加对象功能来说，装饰模式比生成子类实现更为灵活
+代理模式（Proxy Pattern），为其它对象提供一种代理以控制对这个对象的访问。
 
-## 结构
+装饰模式（Decorator Pattern），给一个对象添加一些额外的职责。
 
-![](../assets/pic21.png)
+被代理对象由代理对象创建，客户端甚至不需要知道被代理类的存在；被装饰对象由客户端创建并传给装饰对象
+
+装饰可以 装了又装，层层包裹；代理通常不会代了又代。
 
 ## 代码分析
 
 ```java
-//待装饰接口
-public interface Component {
-    void method();
+/* 
+ * 创建一个对象的抽象也就是接口 
+*/  
+public interface Basket {  
+    public void show();  
+      
 }
-//具体待装饰类
-public class ConcreteComponent implements Component{
-    public void method() {
-        System.out.println("原来的方法");
-    }
+/** 
+ *身份：被装饰的对象 
+ *一个对接口的实现，这个对象表示要我们将来要修饰的篮子里装内容，如果想修饰篮子的造型，还可以创建其他类实现Basket的接口,比如Shape 
+ * 不理解的话可以查看java语言的接口抽象机制 
+*/  
+public class Original implements Basket{  
+    public void show(){  
+      System.out.println("The original Basket contains");  
+    }  
 }
-//抽象装饰器父类
-public abstract class Decorator implements Component{
-    protected Component component;
-    public Decorator(Component component) {
-        super();
-        this.component = component;
-    }
-    public void method() {
-        component.method();
-    }
+
+/** 
+ *身份：装饰器 
+ *为原来的类添加新的功能 
+*/  
+public class AppleDecorator implements Basket{  
+    private Basket basket;  
+    public AppleDecorator( Basket basket){  
+      super();  
+      this.basket = basket;  
+    }  
+      
+    public void show(){  
+      basket.show();  
+      System.out.println("An Apple");  
+    }  
+      
 }
-//具体装饰器类A
-public class ConcreteDecoratorA extends Decorator{
-    public ConcreteDecoratorA(Component component) {
-        super(component);
-    }
-    public void methodA(){
-        System.out.println("被装饰器A扩展的功能");
-    }
-    public void method(){
-        System.out.println("针对该方法加一层A包装");
-        super.method();
-        System.out.println("A包装结束");
-    }
+/** 
+ *身份：装饰器 
+*/  
+public class BananaDecorator implements Basket{  
+    private Basket basket;  
+    public BananaDecorator(Basket basket){  
+        super();  
+        this.basket = basket;  
+    }  
+      
+    public void show(){  
+        basket.show();  
+        System.out.println("A Banana");  
+    }  
+      
 }
-//具体装饰器类B
-public class ConcreteDecoratorB extends Decorator{
-    public ConcreteDecoratorB(Component component) {
-        super(component);
-    }
-    public void methodB(){
-        System.out.println("被装饰器B扩展的功能");
-    }
-    public void method(){
-        System.out.println("针对该方法加一层B包装");
-        super.method();
-        System.out.println("B包装结束");
-    }
+
+/** 
+ *身份：装饰器 
+*/  
+public class OrangeDecorator implements Basket{  
+    private Basket basket;  
+    public OrangeDecorator(Basket basket){  
+        super();  
+        this.basket = basket;  
+    }  
+      
+    public void show(){  
+        basket.show();  
+        System.out.println("An Oranage");  
+    }  
+      
+}
+
+public class DecoratorPattern {  
+  
+    /** 
+     * @param args the command line arguments 
+*/  
+    public static void main(String[] args) {  
+        // TODO code application logic here  
+        Basket basket = new Original();  
+        //一个装饰的过程  
+        Basket myBasket =new AppleDecorator(new BananaDecorator(new OrangeDecorator(basket)));
+        myBasket.show();  
+    }  
 }
 
 ```
