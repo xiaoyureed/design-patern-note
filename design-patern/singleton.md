@@ -24,7 +24,9 @@
 public class SyncSingleton {
 
   //一个静态的实例
-    private static SyncSingleton instance;
+  // 为什么要用 volatile, 禁止指令重排序: https://www.zhihu.com/question/56606703
+    private volatile static SyncSingleton instance;
+    
   //私有化构造函数
     private SyncSingleton() {}
   //给出一个公共的静态方法返回一个单一实例
